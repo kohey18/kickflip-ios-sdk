@@ -50,10 +50,14 @@
     [self.view addSubview:self.recordButton];
     [self.recordButton addTarget:self action:@selector(recordButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    NSLayoutConstraint *constraint = [self.recordButton autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:10.0f];
-    [self.view addConstraint:constraint];
-    constraint = [self.recordButton autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-    [self.view addConstraint:constraint];
+    // recordButtonの位置を変更
+    NSLayoutConstraint *leftConstraint = [self.recordButton autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:10.0f];
+    NSLayoutConstraint *bottomConstraint = [self.recordButton autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:10.0f];
+    [self.view addConstraint:leftConstraint];
+    [self.view addConstraint:bottomConstraint];
+    NSLayoutConstraint *verticalConstraint = [self.recordButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+    [self.view addConstraint:verticalConstraint];
+    
 }
 
 - (void) setupCancelButton {
