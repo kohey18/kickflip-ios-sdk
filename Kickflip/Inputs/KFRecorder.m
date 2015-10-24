@@ -46,6 +46,16 @@
     return nil;
 }
 
+- (AVCaptureDevice *)frontCamera {
+    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+    for (AVCaptureDevice *device in devices) {
+        if ([device position] == AVCaptureDevicePositionFront) {
+            return device;
+        }
+    }
+    return nil;
+}
+
 - (void) setupHLSWriterWithEndpoint:(KFS3Stream*)endpoint {
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -81,7 +91,7 @@
     /*
      * Create audio connection
      */
-    AVCaptureDevice *audioDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+    AVCaptureDevice *audioDevice = [self frontCamera];
     NSError *error = nil;
     AVCaptureDeviceInput *audioInput = [[AVCaptureDeviceInput alloc] initWithDevice:audioDevice error:&error];
     if (error) {
@@ -102,7 +112,7 @@
 
 - (void) setupVideoCapture {
     NSError *error = nil;
-    AVCaptureDevice* videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    AVCaptureDevice *videoDevice = [self frontCamera];
     AVCaptureDeviceInput* videoInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
     if (error) {
         NSLog(@"Error getting video input device: %@", error.description);
