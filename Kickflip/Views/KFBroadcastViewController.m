@@ -29,6 +29,7 @@
     [self.view addSubview:_cameraView];
 }
 
+/*
 - (void) setupShareButton {
     _shareButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [_shareButton addTarget:self action:@selector(shareButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -42,7 +43,7 @@
     [self.view addConstraint:constraint];
     constraint = [self.shareButton autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:10.0f];
     [self.view addConstraint:constraint];
-}
+}*/
 
 - (void) setupRecordButton {
     self.recordButton = [[KFRecordButton alloc] initWithFrame:CGRectZero];
@@ -68,27 +69,6 @@
     [self.view addConstraint:constraint];
 }
 
-- (void) setupRotationLabel {
-    self.rotationLabel = [[UILabel alloc] init];
-    self.rotationLabel.text = @"Rotate Device to Begin";
-    self.rotationLabel.textAlignment = NSTextAlignmentCenter;
-    self.rotationLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17.0f];
-    self.rotationLabel.textColor = [UIColor whiteColor];
-    self.rotationLabel.shadowColor = [UIColor blackColor];
-    self.rotationLabel.shadowOffset = CGSizeMake(0, -1);
-    self.rotationLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:self.rotationLabel];
-    [self.rotationLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.rotationImageView withOffset:10.0f];
-    [self.rotationLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-}
-
-- (void) setupRotationImageView {
-    self.rotationImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"KFDeviceRotation"]];
-    self.rotationImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.rotationImageView.transform = CGAffineTransformMakeRotation(90./180.*M_PI);
-    [self.view addSubview:self.rotationImageView];
-    [self.rotationImageView autoCenterInSuperview];
-}
 
 - (void) cancelButtonPressed:(id)sender {
     if (_completionBlock) {
@@ -111,27 +91,15 @@
     }
 }
 
-- (void) shareButtonPressed:(id)sender {
-    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[self.recorder.stream.kickflipURL] applicationActivities:nil];
-    
-    UIActivityViewControllerCompletionHandler completionHandler = ^(NSString *activityType, BOOL completed) {
-        NSLog(@"share activity: %@", activityType);
-    };
-    activityViewController.completionHandler = completionHandler;
-    
-    [self presentViewController:activityViewController animated:YES completion:nil];
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
     [self setupCameraView];
-    [self setupShareButton];
+//    [self setupShareButton];
     [self setupRecordButton];
     [self setupCancelButton];
-    [self setupRotationImageView];
-    [self setupRotationLabel];
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -145,7 +113,7 @@
     
     _cameraView.frame = self.view.bounds;
     
-    [self checkViewOrientation:animated];
+    //[self checkViewOrientation:animated];
     
     [self startPreview];
 }
@@ -173,20 +141,20 @@
     if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortrait) {
         self.recordButton.enabled = NO;
         [UIView animateWithDuration:0.2 animations:^{
-            self.shareButton.alpha = 0.0f;
+            //self.shareButton.alpha = 0.0f;
             self.recordButton.alpha = 0.0f;
             self.rotationLabel.alpha = 1.0f;
-            self.rotationImageView.alpha = 1.0f;
+            //self.rotationImageView.alpha = 1.0f;
         } completion:NULL];
     } else {
         self.recordButton.enabled = YES;
         [UIView animateWithDuration:0.2 animations:^{
             if (self.recorder.isRecording) {
-                self.shareButton.alpha = 1.0f;
+                //self.shareButton.alpha = 1.0f;
             }
             self.recordButton.alpha = 1.0f;
             self.rotationLabel.alpha = 0.0f;
-            self.rotationImageView.alpha = 0.0f;
+            //self.rotationImageView.alpha = 0.0f;
         } completion:NULL];
     }
 }
@@ -248,12 +216,12 @@
         self.recordButton.isRecording = NO;
     } else {
         self.recordButton.isRecording = YES;
-        self.shareButton.alpha = 1.0f;
+        //self.shareButton.alpha = 1.0f;
     }
 }
 
 - (void) recorder:(KFRecorder *)recorder streamReadyAtURL:(NSURL *)url {
-    self.shareButton.enabled = YES;
+    //self.shareButton.enabled = YES;
     if (_readyBlock) {
         _readyBlock(recorder.stream);
     }
