@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <AWSCore/AWSCore.h>
 #import "KFS3Stream.h"
+#import "BFTask.h"
 
 @interface KFAWSCredentialsProvider : NSObject <AWSCredentialsProvider>
 
