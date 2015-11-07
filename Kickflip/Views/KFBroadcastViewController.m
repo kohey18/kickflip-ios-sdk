@@ -126,13 +126,14 @@
 - (void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     // this is not the most beautiful animation...
+    /*
     AVCaptureVideoPreviewLayer* preview = self.recorder.previewLayer;
     [UIView animateWithDuration:duration animations:^{
         preview.frame = self.cameraView.bounds;
     } completion:NULL];
     [[preview connection] setVideoOrientation:[self avOrientationForInterfaceOrientation:toInterfaceOrientation]];
-    
-    [self checkViewOrientation:YES];
+    */
+    //[self checkViewOrientation:YES];
 }
 
 - (void) checkViewOrientation:(BOOL)animated {
@@ -188,11 +189,6 @@
     AVCaptureVideoPreviewLayer* preview = self.recorder.previewLayer;
     [preview removeFromSuperlayer];
     preview.frame = self.cameraView.bounds;
-    
-    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-    
-    [[preview connection] setVideoOrientation:[self avOrientationForInterfaceOrientation:orientation]];
-    
     [self.cameraView.layer addSublayer:preview];
 }
 

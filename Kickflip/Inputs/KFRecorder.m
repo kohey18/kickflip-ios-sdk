@@ -71,8 +71,16 @@
 
 - (void) setupEncoders {
     self.audioSampleRate = 44100;
-    self.videoHeight = 720;
-    self.videoWidth = 1280;
+    
+    //self.videoHeight = 720;
+    //self.videoWidth = 1280;
+    
+    /*
+     vertical video
+     */
+    self.videoWidth = 720;
+    self.videoHeight = 1280;
+    
     int audioBitrate = 64 * 1000; // 64 Kbps
     int maxBitrate = [Kickflip maxBitrate];
     int videoBitrate = maxBitrate - audioBitrate;
@@ -147,6 +155,7 @@
 #pragma mark AVCaptureOutputDelegate method
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
+    connection.videoOrientation = AVCaptureVideoOrientationPortrait;
     if (!_isRecording) {
         return;
     }
