@@ -22,6 +22,8 @@
 
 @interface KFRecorder()
 @property (nonatomic) double minBitrate;
+@property (nonatomic) int width;
+@property (nonatomic) int height;
 @property (nonatomic) BOOL hasScreenshot;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @end
@@ -31,6 +33,8 @@
 - (id) init {
     if (self = [super init]) {
         _minBitrate = 300 * 1000;
+        _width = 720;
+        _height = 1280;
         [self setupSession];
         [self setupEncoders];
     }
@@ -57,7 +61,7 @@
 }
 
 - (void) setupHLSWriterWithEndpoint:(KFS3Stream*)endpoint {
-    
+
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
     NSString *folderName = [NSString stringWithFormat:@"%@.hls", endpoint.streamID];
@@ -65,6 +69,7 @@
     [[NSFileManager defaultManager] createDirectoryAtPath:hlsDirectoryPath withIntermediateDirectories:YES attributes:nil error:nil];
     self.hlsWriter = [[KFHLSWriter alloc] initWithDirectoryPath:hlsDirectoryPath];
     [_hlsWriter addVideoStreamWithWidth:self.videoWidth height:self.videoHeight];
+    
     [_hlsWriter addAudioStreamWithSampleRate:self.audioSampleRate];
 
 }
@@ -72,19 +77,14 @@
 - (void) setupEncoders {
     self.audioSampleRate = 44100;
     
-    //self.videoHeight = 720;
-    //self.videoWidth = 1280;
-    
-    /*
-     vertical video
-     */
-    self.videoWidth = 720;
-    self.videoHeight = 1280;
+    self.videoWidth = _width;
+    self.videoHeight = _height;
     
     int audioBitrate = 64 * 1000; // 64 Kbps
     int maxBitrate = [Kickflip maxBitrate];
     int videoBitrate = maxBitrate - audioBitrate;
     _h264Encoder = [[KFH264Encoder alloc] initWithBitrate:videoBitrate width:self.videoWidth height:self.videoHeight];
+    
     _h264Encoder.delegate = self;
     
     _aacEncoder = [[KFAACEncoder alloc] initWithBitrate:audioBitrate sampleRate:self.audioSampleRate channels:1];
@@ -139,7 +139,10 @@
     if ([_session canAddOutput:_videoOutput]) {
         [_session addOutput:_videoOutput];
     }
+    
+    // setting AVCaptureVideoOrientationPortrait
     _videoConnection = [_videoOutput connectionWithMediaType:AVMediaTypeVideo];
+    [_videoConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
 }
 
 #pragma mark KFEncoderDelegate method
@@ -161,7 +164,6 @@
     }
     // pass frame to encoders
     if (connection == _videoConnection) {
-        _videoConnection.videoOrientation = AVCaptureVideoOrientationPortrait;
         if (!_hasScreenshot) {
             UIImage *image = [self imageFromSampleBuffer:sampleBuffer];
             NSString *path = [self.hlsWriter.directoryPath stringByAppendingPathComponent:@"thumb.jpg"];

@@ -41,9 +41,13 @@
 @property (nonatomic, strong) KFHLSWriter *hlsWriter;
 @property (nonatomic, strong) KFStream *stream;
 
-@property (nonatomic) NSUInteger videoWidth;
-@property (nonatomic) NSUInteger videoHeight;
-@property (nonatomic) NSUInteger audioSampleRate;
+// @property (nonatomic) NSUInteger videoWidth;
+// @property (nonatomic) NSUInteger videoHeight;
+// @property (nonatomic) NSUInteger audioSampleRate;
+
+@property (nonatomic) int videoWidth;
+@property (nonatomic) int videoHeight;
+@property (nonatomic) int audioSampleRate;
 
 @property (nonatomic) BOOL isRecording;
 
