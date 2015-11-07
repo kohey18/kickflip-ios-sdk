@@ -99,7 +99,7 @@
     /*
      * Create audio connection
      */
-    AVCaptureDevice *audioDevice = [self frontCamera];
+    AVCaptureDevice *audioDevice = [self audioDevice];
     NSError *error = nil;
     AVCaptureDeviceInput *audioInput = [[AVCaptureDeviceInput alloc] initWithDevice:audioDevice error:&error];
     if (error) {
@@ -108,7 +108,7 @@
     if ([_session canAddInput:audioInput]) {
         [_session addInput:audioInput];
     }
-    
+
     _audioQueue = dispatch_queue_create("Audio Capture Queue", DISPATCH_QUEUE_SERIAL);
     _audioOutput = [[AVCaptureAudioDataOutput alloc] init];
     [_audioOutput setSampleBufferDelegate:self queue:_audioQueue];
@@ -155,12 +155,13 @@
 #pragma mark AVCaptureOutputDelegate method
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
-    connection.videoOrientation = AVCaptureVideoOrientationPortrait;
+
     if (!_isRecording) {
         return;
     }
     // pass frame to encoders
     if (connection == _videoConnection) {
+        _videoConnection.videoOrientation = AVCaptureVideoOrientationPortrait;
         if (!_hasScreenshot) {
             UIImage *image = [self imageFromSampleBuffer:sampleBuffer];
             NSString *path = [self.hlsWriter.directoryPath stringByAppendingPathComponent:@"thumb.jpg"];
