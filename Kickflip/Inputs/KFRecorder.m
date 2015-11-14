@@ -143,6 +143,7 @@
     // setting AVCaptureVideoOrientationPortrait
     _videoConnection = [_videoOutput connectionWithMediaType:AVMediaTypeVideo];
     [_videoConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+    _videoConnection.videoMirrored = YES;
 }
 
 #pragma mark KFEncoderDelegate method
